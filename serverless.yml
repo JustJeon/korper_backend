@@ -1,0 +1,84 @@
+service: tmp-backend
+frameworkVersion: '3'
+
+provider:
+  iam:
+    role: DefaultRole
+  httpApi:
+    cors: true
+    authorizers:
+      monthconcertAuthorizer:
+        type: request
+        functionName: auth_authorizer
+        identitySource: $request.header.Authorization
+        enableSimpleResponses: true
+  name: aws
+  runtime: nodejs20.x
+  region: ap-northeast-2
+  stage: dev
+  environment:
+    STAGE: ${env:STAGE, "dev"}
+    JWT_SECRET_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/jwt_secret_key}
+    NAVER_CLIENT_SECRET: ${ssm:/${self:service}/${env:STAGE, "dev"}/naver_client_secret}
+    KAKAO_REST_API_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/kakao_rest_api_key}
+    GOOGLE_CLIENT_SECRET: ${ssm:/${self:service}/${env:STAGE, "dev"}/google_client_secret}
+    # OPENAI_API_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/openai_api_key}
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    external:
+      ['@sparticuz/chromium-min', 'pg', 'pg-query-stream', 'sqlite3', 'better-sqlite3', 'oracledb', 'tedious', 'mysql']
+
+plugins:
+  - serverless-esbuild
+
+resources:
+  Resources:
+    DefaultRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}-${env:STAGE, "dev"}-LambdaExcutionRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+          - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        Policies:
+          - PolicyName: myPolicyName
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - rds-db:connect
+                    - logs:*
+                    - athena:*
+                    - ssm:*
+                    - execute-api:*
+                    - secretsmanager:*
+                    - lambda:*
+                    - sns:*
+                    - sqs:*
+                  Resource: '*'
+
+functions:
+  hello:
+    handler: build/hello/get.handler
+    events:
+      - httpApi:
+          path: /hello
+          method: get
+  auth_authorizer:
+    handler: build/auth/authorizer.handler
+    events: []
+  
