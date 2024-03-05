@@ -1,4 +1,4 @@
-service: tmp-backend
+service: korper-backend
 frameworkVersion: '3'
 
 provider:
@@ -7,7 +7,7 @@ provider:
   httpApi:
     cors: true
     authorizers:
-      monthconcertAuthorizer:
+      korperAuthorizer:
         type: request
         functionName: auth_authorizer
         identitySource: $request.header.Authorization
@@ -21,8 +21,6 @@ provider:
     JWT_SECRET_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/jwt_secret_key}
     NAVER_CLIENT_SECRET: ${ssm:/${self:service}/${env:STAGE, "dev"}/naver_client_secret}
     KAKAO_REST_API_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/kakao_rest_api_key}
-    GOOGLE_CLIENT_SECRET: ${ssm:/${self:service}/${env:STAGE, "dev"}/google_client_secret}
-    # OPENAI_API_KEY: ${ssm:/${self:service}/${env:STAGE, "dev"}/openai_api_key}
 
 custom:
   esbuild:
@@ -81,4 +79,49 @@ functions:
   auth_authorizer:
     handler: build/auth/authorizer.handler
     events: []
-  
+  api_docs_get:
+    handler: build/api/docs/get.handler
+    events:
+      - httpApi:
+          path: /api/docs
+          method: get
+    package:
+      include:
+        - apiDocs.yml
+  signin_apple_post:
+    handler: build/signin/apple/post.handler
+    events:
+      - httpApi:
+          path: /signin/apple
+          method: post
+  signin_naver_post:
+    handler: build/signin/naver/post.handler
+    events:
+      - httpApi:
+          path: /signin/naver
+          method: post
+  signin_kakao_post:
+    handler: build/signin/kakao/post.handler
+    events:
+      - httpApi:
+          path: /signin/kakao
+          method: post
+  signin_google_post:
+    handler: build/signin/google/post.handler
+    events:
+      - httpApi:
+          path: /signin/google
+          method: post
+  token_access_get:
+    handler: build/token/access/get.handler
+    events:
+      - httpApi:
+          path: /token/access
+          method: get
+  token_refresh_delete:
+    handler: build/token/refresh/delete.handler
+    events:
+      - httpApi:
+          path: /token/refresh
+          method: delete
+          authorizer: korperAuthorizer

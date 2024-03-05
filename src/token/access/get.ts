@@ -29,5 +29,8 @@ export const handler = async (event: APIGatewayProxyEventV2) => {
 
   const accessToken = await generateUserAccessToken(user.idx);
 
-  return { statusCode: 200, body: JSON.stringify({ accessToken }) };
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ code: 'Success', message: 'success', result: { accessToken } }),
+  };
 };

@@ -16,7 +16,7 @@ async function getNewDBInstance() {
       user: secret.username,
       password: secret.password,
       port: 3306,
-      database: `tmp_${process.env.STAGE}`,
+      database: `korper_${process.env.STAGE}`,
       dateStrings: true,
       timezone: '+09:00',
     },

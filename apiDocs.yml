@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: Korper
+  description: make 3D model from video
+  version: 0.0.1
+  contact:
+    name: API support
+    url: gyrms9412@naver.com
+    email: gyrms9412@naver.com
+  license:
+    name: MIT
+    url: 'https://en.wikipedia.org/wiki/MIT_License'
+servers:
+  - url: 'https://16rm2ha8n4.execute-api.ap-northeast-2.amazonaws.com'
+paths:
+  /signin/apple:
+    post:
+      summary: signin/apple
+      description: Apple 회원가입 / 로그인을 처리한다.
+      operationId: signin/apple/post
+      tags:
+        - signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identityToken:
+                  type: string
+                  description: apple server에서 발급한 identityToken
+                fullName:
+                  type: string
+                  description: apple에서 첫 로그인 시도시 1회만 제공하는 사용자의 전체 이름
+                signupFlag:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+                marketingAgreed:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+              required:
+                - identityToken
+              additionalProperties: false
+      responses:
+        '200':
+          description: |
+            ### 로그인 요청 
+              - 미가입 유저 : code: Require_Signup 전달 
+              - 가입 유저 : code: Success + 인증 토큰 전달  
+            ### 회원가입 요청 
+              - signupFlag: true + marketingAgreed: boolean 으로 요청시 \
+                code: Success + 인증 토큰 전달
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Success
+                      message:
+                        type: string
+                        description: success
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: access token(60분)
+                          refreshToken:
+                            type: string
+                            description: refresh token(180일)
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Require_Signup
+                      message:
+                        type: string
+                        description: Require Signup
+                      result:
+                        type: object
+                        properties:
+                          userEmail:
+                            type: string
+                            description: 가입되어 있지 않은 유저의 이메일
+        '401':
+          description: 'code: Verification_Failed'
+      parameters: []
+  /token/access:
+    get:
+      summary: token/access
+      description: refresh token으로 access token을 재발급한다.
+      operationId: token/access/get
+      tags:
+        - token
+      parameters:
+        - name: refreshToken
+          in: query
+          description: login 시 발급한 refresh token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  result:
+                    type: object
+        '401':
+          description: 'code: Invalid_Token'
+        '404':
+          description: 'code: User_Not_Found'
+  /token/refresh:
+    delete:
+      summary: token/refresh
+      description: 유저의 refresh token을 삭제한다.(로그아웃)
+      operationId: token/refresh/delete
+      tags:
+        - token
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  result:
+                    type: string
+      parameters: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
