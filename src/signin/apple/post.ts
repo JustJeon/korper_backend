@@ -18,7 +18,9 @@ const parameter = {
 
 export const handler = async (event: APIGatewayProxyEventV2) => {
   console.log('[event]', event);
-  const { identityToken, fullName, signupFlag, marketingAgreed} = JSON.parse(event.body) as FromSchema<typeof parameter>;
+  const { identityToken, fullName, signupFlag, marketingAgreed } = JSON.parse(event.body) as FromSchema<
+    typeof parameter
+  >;
 
   try {
     // apple server에서 발급한 identityToken 검증 및 payload 조회
@@ -42,7 +44,7 @@ export const handler = async (event: APIGatewayProxyEventV2) => {
           body: JSON.stringify({
             code: 'Require_Signup',
             message: 'Require Signup',
-            result: { userEmail },
+            result: { accessToken: null, refreshToken: null },
           }),
         };
       }
@@ -52,7 +54,7 @@ export const handler = async (event: APIGatewayProxyEventV2) => {
           user_email: userEmail,
           user_name: fullName,
           register_type: USER_REGISTER_TYPE.APPLE,
-          marketing_agreed: marketingAgreed
+          marketing_agreed: marketingAgreed,
         });
         user = await mysqlUtil.getOne('tb_user', [], { user_email: userEmail });
       }
