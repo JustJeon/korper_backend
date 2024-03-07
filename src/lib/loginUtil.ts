@@ -42,26 +42,11 @@ export async function verifyAppleToken(identityToken: string) {
 }
 
 // Naver
-const NAVER_CLIENT_ID = 'LYQURc6u2bTUKRXaSEmc';
-const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET;
-
-export async function verifyNaverCode(code: string) {
-  // Authorization Code로 Access Token 발급
-  let res = await axios.get(`https://nid.naver.com/oauth2.0/token`, {
-    params: {
-      grant_type: 'authorization_code', // 발급
-      client_id: NAVER_CLIENT_ID,
-      client_secret: NAVER_CLIENT_SECRET,
-      code,
-      state: 'naver', // cross-site request forgery 방지를 위한 상태 토큰
-    },
-  });
-  console.log('[get naver token response]', res);
-
+export async function verifyNaverToken(accessToken: string) {
   // Access Token으로 user data 조회
-  res = await axios.get('https://openapi.naver.com/v1/nid/me', {
+  const res = await axios.get('https://openapi.naver.com/v1/nid/me', {
     headers: {
-      Authorization: `Bearer ${res.data.access_token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   console.log('[get naver user info response]', res);
@@ -71,22 +56,11 @@ export async function verifyNaverCode(code: string) {
 }
 
 // Kakao
-const KAKAO_REST_API_KEY = process.env.KAKAO_REST_API_KEY;
-
-export async function verifyKakaoCode(code: string) {
-  // Authorization Code로 Access Token 발급
-  let res = await axios.post(`https://kauth.kakao.com/oauth/token`, {
-    grant_type: 'authorization_code',
-    client_id: KAKAO_REST_API_KEY,
-    redirect_uri: '',
-    code,
-  });
-  console.log('[get kakao token response]', res);
-
+export async function verifyKakaoToken(accessToken: string) {
   // Access Token으로 user data 조회
-  res = await axios.get('https://kapi.kakao.com/v2/user/me', {
+  const res = await axios.get('https://kapi.kakao.com/v2/user/me', {
     headers: {
-      Authorization: `Bearer ${res.data.access_token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   console.log('[get kakao user info response]', res);

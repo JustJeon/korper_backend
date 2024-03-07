@@ -83,12 +83,247 @@ paths:
                       result:
                         type: object
                         properties:
-                          userEmail:
+                          accessToken:
                             type: string
-                            description: 가입되어 있지 않은 유저의 이메일
+                            description: 'null'
+                          refreshToken:
+                            type: string
+                            description: 'null'
         '401':
           description: 'code: Verification_Failed'
       parameters: []
+
+  /signin/naver:
+    post:
+      summary: signin/naver
+      description: Naver 회원가입 / 로그인을 처리한다.
+      operationId: signin/naver/post
+      tags:
+        - signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: naver에서 발급한 code
+                signupFlag:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+                marketingAgreed:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+              required:
+                - code
+              additionalProperties: false
+      responses:
+        '200':
+          description: |
+            ### 로그인 요청 
+              - 미가입 유저 : code: Require_Signup 전달 
+              - 가입 유저 : code: Success + 인증 토큰 전달  
+            ### 회원가입 요청 
+              - signupFlag: true + marketingAgreed: boolean 으로 요청시 \
+                code: Success + 인증 토큰 전달
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Success
+                      message:
+                        type: string
+                        description: success
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: access token(60분)
+                          refreshToken:
+                            type: string
+                            description: refresh token(180일)
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Require_Signup
+                      message:
+                        type: string
+                        description: Require Signup
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: 'null'
+                          refreshToken:
+                            type: string
+                            description: 'null'
+        '401':
+          description: 'code: Verification_Failed'
+      parameters: []
+
+  /signin/kakao:
+    post:
+      summary: signin/kakao
+      description: Kakao 회원가입 / 로그인을 처리한다.
+      operationId: signin/kakao/post
+      tags:
+        - signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: kakao에서 발급한 code
+                signupFlag:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+                marketingAgreed:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+              required:
+                - code
+              additionalProperties: false
+      responses:
+        '200':
+          description: |
+            ### 로그인 요청 
+              - 미가입 유저 : code: Require_Signup 전달 
+              - 가입 유저 : code: Success + 인증 토큰 전달  
+            ### 회원가입 요청 
+              - signupFlag: true + marketingAgreed: boolean 으로 요청시 \
+                code: Success + 인증 토큰 전달
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Success
+                      message:
+                        type: string
+                        description: success
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: access token(60분)
+                          refreshToken:
+                            type: string
+                            description: refresh token(180일)
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Require_Signup
+                      message:
+                        type: string
+                        description: Require Signup
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: 'null'
+                          refreshToken:
+                            type: string
+                            description: 'null'
+        '401':
+          description: 'code: Verification_Failed'
+      parameters: []
+
+  /signin/google:
+    post:
+      summary: signin/google
+      description: Google 회원가입 / 로그인을 처리한다.
+      operationId: signin/google/post
+      tags:
+        - signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idToken:
+                  type: string
+                  description: google에서 발급한 idToken
+                signupFlag:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+                marketingAgreed:
+                  type: boolean
+                  description: 회원가입 요청시 포함
+              required:
+                - idToken
+              additionalProperties: false
+      responses:
+        '200':
+          description: |
+            ### 로그인 요청 
+              - 미가입 유저 : code: Require_Signup 전달 
+              - 가입 유저 : code: Success + 인증 토큰 전달  
+            ### 회원가입 요청 
+              - signupFlag: true + marketingAgreed: boolean 으로 요청시 \
+                code: Success + 인증 토큰 전달
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Success
+                      message:
+                        type: string
+                        description: success
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: access token(60분)
+                          refreshToken:
+                            type: string
+                            description: refresh token(180일)
+                  - type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Require_Signup
+                      message:
+                        type: string
+                        description: Require Signup
+                      result:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+                            description: 'null'
+                          refreshToken:
+                            type: string
+                            description: 'null'
+        '401':
+          description: 'code: Verification_Failed'
+      parameters: []
+
   /token/access:
     get:
       summary: token/access
@@ -121,6 +356,7 @@ paths:
           description: 'code: Invalid_Token'
         '404':
           description: 'code: User_Not_Found'
+
   /token/refresh:
     delete:
       summary: token/refresh
