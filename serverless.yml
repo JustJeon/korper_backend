@@ -10,7 +10,8 @@ provider:
       korperAuthorizer:
         type: request
         functionName: auth_authorizer
-        identitySource: $request.header.Authorization
+        identitySource:   
+          - $request.header.Authorization
         enableSimpleResponses: true
   name: aws
   runtime: nodejs20.x
@@ -122,4 +123,21 @@ functions:
       - httpApi:
           path: /token/refresh
           method: delete
-          authorizer: korperAuthorizer
+          authorizer:
+            name: korperAuthorizer
+  user_get:
+    handler: build/user/get.handler
+    events:
+      - httpApi:
+          path: /user
+          method: get
+          authorizer: 
+            name: korperAuthorizer
+  user_put:
+    handler: build/user/put.handler
+    events:
+      - httpApi:
+          path: /user
+          method: put
+          authorizer: 
+            name: korperAuthorizer

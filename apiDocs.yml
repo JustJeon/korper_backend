@@ -381,6 +381,160 @@ paths:
                   result:
                     type: string
       parameters: []
+
+  /user:
+    get:
+      summary: user
+      description: User 정보를 조회한다.
+      operationId: user/get
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: |
+            유저 데이터 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Success
+                  message:
+                    type: string
+                    description: success
+                  result:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          idx:
+                            type: integer
+                            description: 유저 unique index
+                          user_email:
+                            type: string
+                            description: 유저 이메일
+                          user_name:
+                            type: string
+                            description: 유저 이름
+                          register_type:
+                            type: string
+                            description: 소셜 로그인 타입
+                          registered_date:
+                            type: string
+                            description: 회원가입 날짜(YYYY-MM-DD)
+                          marketing_agreed:
+                            type: boolean
+                            description: 마케팅 동의 여부
+                      profileImage:
+                        type: object
+                        description: 프로필 이미지 (있는 경우)
+                        properties:
+                          presignedUrl:
+                            type: string 
+                            nullable: true
+                            description: 프로필 이미지 presigned url
+                          contentType:
+                            type: object
+                            nullable: true
+                            description: 프로필 이미지 content type
+    put:
+      summary: user
+      description: User 정보를 수정한다.
+      operationId: user/put
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profileImage:
+                  type: boolean
+                  description: 프로필 이미지 수정 요청시
+                marketingAgreed:
+                  type: boolean
+                  description: 마케팅 동의 여부 수정 요청시
+      responses:
+        '200':
+          description: |
+            - 수정된 유저 데이터 전달
+            - 프로필 이미지 수정 요청시 업로드할 presigned url 전달
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Success
+                  message:
+                    type: string
+                    description: success
+                  result:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          idx:
+                            type: integer
+                            description: 유저 unique index
+                          user_email:
+                            type: string
+                            description: 유저 이메일
+                          user_name:
+                            type: string
+                            description: 유저 이름
+                          register_type:
+                            type: string
+                            description: 소셜 로그인 타입
+                          registered_date:
+                            type: string
+                            description: 회원가입 날짜(YYYY-MM-DD)
+                          marketing_agreed:
+                            type: boolean
+                            description: 마케팅 동의 여부
+                      profileImagePreSignedUrlInfo:
+                        type: object
+                        nullable: true
+                        description: 프로필 이미지를 업로드할 위치 정보
+                        properties:
+                          url:
+                            type: string 
+                            description: 프로필 이미지 presigned url
+                          fields:
+                            type: object
+                            description: 업로드 form / header에 포함할 필드 정보
+                            properties:
+                              bucket:
+                                type: string
+                                description: 업로드할 bucket
+                              X-Amz-Algorithm:
+                                type: string
+                                description: 암호화 알고리즘
+                              X-Amz-Credential:
+                                type: string
+                                description: 업로드할 credential
+                              X-Amz-Date:
+                                type: string
+                              key:
+                                type: string
+                                description: 업로드할 key
+                              Policy:
+                                type: string
+                                description: policy
+                              X-Amz-Signature:
+                                type: string
+                                description: signature
+
 components:
   securitySchemes:
     bearerAuth:
