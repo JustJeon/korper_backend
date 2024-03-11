@@ -14,4 +14,9 @@ describe('Korper test', () => {
     const response = await privateFunctionTest(getUser, {});
     expect(response).toHaveProperty('statusCode', 200);
   });
+
+  test('PUT user', async () => {
+    const response = await privateFunctionTest(putUser, { profileImage: true, marketingAgreed: true });
+    expect(response).toHaveProperty('statusCode', 200);
+  });
 });
