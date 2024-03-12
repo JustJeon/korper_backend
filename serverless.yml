@@ -141,3 +141,11 @@ functions:
           method: put
           authorizer: 
             name: korperAuthorizer
+  user_delete:
+    handler: build/user/delete.handler
+    events:
+      - httpApi:
+          path: /user
+          method: delete
+          authorizer: 
+            name: korperAuthorizer
