@@ -15,9 +15,9 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
   // 프로필 이미지 presigned url 발급
   const s3ObjectKey = `profile/${userEmail}/image`;
   let presignedUrl = await getPresignedUrl(s3ObjectKey);
-  const { ContentType: contentType, error } = await getHeadObject(s3ObjectKey);
+  const { error } = await getHeadObject(s3ObjectKey);
   if (error === 'NotFound') presignedUrl = null;
-  user.profileImage = { presignedUrl, contentType };
+  user.profileImage = { presignedUrl };
 
   return {
     statusCode: 200,
