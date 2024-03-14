@@ -430,18 +430,18 @@ paths:
                           marketing_agreed:
                             type: boolean
                             description: 마케팅 동의 여부
-                      profileImage:
-                        type: object
-                        description: 프로필 이미지 (있는 경우)
-                        properties:
-                          presignedUrl:
-                            type: string 
-                            nullable: true
-                            description: 프로필 이미지 presigned url
-                          contentType:
+                          profileImage:
                             type: object
-                            nullable: true
-                            description: 프로필 이미지 content type
+                            description: 프로필 이미지 (있는 경우)
+                            properties:
+                              presignedUrl:
+                                type: string 
+                                nullable: true
+                                description: 프로필 이미지 presigned url
+                              contentType:
+                                type: object
+                                nullable: true
+                                description: 프로필 이미지 content type
     put:
       summary: user
       description: User 정보를 수정한다.

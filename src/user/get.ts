@@ -17,13 +17,14 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
   let presignedUrl = await getPresignedUrl(s3ObjectKey);
   const { ContentType: contentType, error } = await getHeadObject(s3ObjectKey);
   if (error === 'NotFound') presignedUrl = null;
+  user.profileImage = { presignedUrl, contentType };
 
   return {
     statusCode: 200,
     body: JSON.stringify({
       code: 'Success',
       message: 'success',
-      result: { user, profileImage: { presignedUrl, contentType } },
+      result: { user },
     }),
   };
 };
