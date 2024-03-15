@@ -7,6 +7,7 @@ import { getPresignedPostUrl } from '../lib/aws/s3Util';
 const parameter = {
   type: 'object',
   properties: {
+    name: { type: 'string' },
     profileImage: { type: 'boolean' },
     marketingAgreed: { type: 'boolean' },
   },
@@ -15,9 +16,14 @@ const parameter = {
 
 export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<{ [key: string]: any }>) => {
   console.log('[event]', event);
-  const { profileImage, marketingAgreed } = JSON.parse(event.body) as FromSchema<typeof parameter>;
+  const { name, profileImage, marketingAgreed } = JSON.parse(event.body) as FromSchema<typeof parameter>;
   const userIdx = event.requestContext.authorizer.lambda.idx;
   const userEmail = event.requestContext.authorizer.lambda.user_email;
+
+  // 유저 이름 업데이트
+  if (name) {
+    await mysqlUtil.update('tb_user', { user_name: name }, { idx: userIdx });
+  }
 
   // 프로필 이미지 업로드 url 발급
   let profileImagePreSignedUrlInfo = {};

@@ -456,6 +456,9 @@ paths:
             schema:
               type: object
               properties:
+                name: 
+                  type: string
+                  description: 유저 이름 수정 요청시
                 profileImage:
                   type: boolean
                   description: 프로필 이미지 수정 요청시
