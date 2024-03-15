@@ -26,7 +26,7 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
   }
 
   // 프로필 이미지 업로드 url 발급
-  let profileImagePreSignedUrlInfo = {};
+  let profileImagePreSignedUrlInfo = null;
   if (profileImage) {
     const { url, fields } = await getPresignedPostUrl(`profile/${userEmail}/image`);
     profileImagePreSignedUrlInfo = { url, fields };
