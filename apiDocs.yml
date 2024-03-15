@@ -410,38 +410,8 @@ paths:
                     type: object
                     properties:
                       user:
-                        type: object
-                        properties:
-                          idx:
-                            type: integer
-                            description: 유저 unique index
-                          user_email:
-                            type: string
-                            description: 유저 이메일
-                          user_name:
-                            type: string
-                            description: 유저 이름
-                          register_type:
-                            type: string
-                            description: 소셜 로그인 타입
-                          registered_date:
-                            type: string
-                            description: 회원가입 날짜(YYYY-MM-DD)
-                          marketing_agreed:
-                            type: boolean
-                            description: 마케팅 동의 여부
-                          profileImage:
-                            type: object
-                            description: 프로필 이미지 (있는 경우)
-                            properties:
-                              presignedUrl:
-                                type: string 
-                                nullable: true
-                                description: 프로필 이미지 presigned url
-                              contentType:
-                                type: object
-                                nullable: true
-                                description: 프로필 이미지 content type
+                        $ref: '#/components/schemas/User'
+                              
     put:
       summary: user
       description: User 정보를 수정한다.
@@ -485,26 +455,7 @@ paths:
                     type: object
                     properties:
                       user:
-                        type: object
-                        properties:
-                          idx:
-                            type: integer
-                            description: 유저 unique index
-                          user_email:
-                            type: string
-                            description: 유저 이메일
-                          user_name:
-                            type: string
-                            description: 유저 이름
-                          register_type:
-                            type: string
-                            description: 소셜 로그인 타입
-                          registered_date:
-                            type: string
-                            description: 회원가입 날짜(YYYY-MM-DD)
-                          marketing_agreed:
-                            type: boolean
-                            description: 마케팅 동의 여부
+                        $ref: '#/components/schemas/User'
                       profileImagePreSignedUrlInfo:
                         type: object
                         nullable: true
@@ -569,3 +520,29 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+  schemas:
+    User:
+      type: object
+      properties:
+        idx:
+          type: integer
+          description: 유저 unique index
+        user_email:
+          type: string
+          description: 유저 이메일
+        user_name:
+          type: string
+          description: 유저 이름
+        register_type:
+          type: string
+          description: 소셜 로그인 타입
+        registered_date:
+          type: string
+          description: 회원가입 날짜(YYYY-MM-DD)
+        marketing_agreed:
+          type: boolean
+          description: 마케팅 동의 여부
+        profileImageUrl:
+          type: string
+          nullable: true
+          description: 프로필 이미지 presigned url (있는 경우)

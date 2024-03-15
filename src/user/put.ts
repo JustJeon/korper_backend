@@ -2,7 +2,7 @@ import { APIGatewayProxyEventV2WithLambdaAuthorizer } from 'aws-lambda';
 import { USER_JWT_CONTENTS } from '../lib/jwt';
 import mysqlUtil from '../lib/mysqlUtil';
 import { FromSchema } from 'json-schema-to-ts';
-import { getPresignedPostUrl } from '../lib/aws/s3Util';
+import { getHeadObject, getPresignedPostUrl, getPresignedUrl } from '../lib/aws/s3Util';
 
 const parameter = {
   type: 'object',
@@ -39,6 +39,13 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
 
   const userColumns = [...USER_JWT_CONTENTS, 'marketing_agreed'];
   const user = await mysqlUtil.getOne('tb_user', userColumns, { idx: userIdx });
+  
+  // 프로필 이미지 presigned url 발급
+  const s3ObjectKey = `profile/${userEmail}/image`;
+  let presignedUrl = await getPresignedUrl(s3ObjectKey);
+  const { error } = await getHeadObject(s3ObjectKey);
+  if (error === 'NotFound') presignedUrl = null;
+  user.profileImageUrl = presignedUrl;
 
   return {
     statusCode: 200,
