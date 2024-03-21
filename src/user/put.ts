@@ -26,10 +26,9 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
   }
 
   // 프로필 이미지 업로드 url 발급
-  let profileImagePreSignedUrlInfo = null;
+  let profileImageUrl = null;
   if (profileImage) {
-    const { url, fields } = await getPresignedPostUrl(`profile/${userEmail}/image`);
-    profileImagePreSignedUrlInfo = { url, fields };
+    profileImageUrl = await getPresignedPostUrl(`profile/${userEmail}/image`);
   }
 
   // 마케팅 동의 여부 업데이트
@@ -39,7 +38,7 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
 
   const userColumns = [...USER_JWT_CONTENTS, 'marketing_agreed'];
   const user = await mysqlUtil.getOne('tb_user', userColumns, { idx: userIdx });
-  
+
   // 프로필 이미지 presigned url 발급
   const s3ObjectKey = `profile/${userEmail}/image`;
   let presignedUrl = await getPresignedUrl(s3ObjectKey);
@@ -49,6 +48,6 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ code: 'Success', message: 'success', result: { user, profileImagePreSignedUrlInfo } }),
+    body: JSON.stringify({ code: 'Success', message: 'success', result: { user, profileImageUrl } }),
   };
 };

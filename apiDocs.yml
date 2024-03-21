@@ -456,38 +456,10 @@ paths:
                     properties:
                       user:
                         $ref: '#/components/schemas/User'
-                      profileImagePreSignedUrlInfo:
-                        type: object
+                      profileImageUrl:
+                        type: string
                         nullable: true
-                        description: 프로필 이미지를 업로드할 위치 정보
-                        properties:
-                          url:
-                            type: string 
-                            description: 프로필 이미지 presigned url
-                          fields:
-                            type: object
-                            description: 업로드 form / header에 포함할 필드 정보
-                            properties:
-                              bucket:
-                                type: string
-                                description: 업로드할 bucket
-                              X-Amz-Algorithm:
-                                type: string
-                                description: 암호화 알고리즘
-                              X-Amz-Credential:
-                                type: string
-                                description: 업로드할 credential
-                              X-Amz-Date:
-                                type: string
-                              key:
-                                type: string
-                                description: 업로드할 key
-                              Policy:
-                                type: string
-                                description: policy
-                              X-Amz-Signature:
-                                type: string
-                                description: signature
+                        description: 프로필 이미지를 업로드할 위치의 presigned url
     delete:
       summary: user
       description: accessToken의 claim을 참조해 User를 삭제한다.
