@@ -3,6 +3,11 @@ import { S3Client, GetObjectCommand, HeadObjectCommand, PutObjectCommand } from 
 
 const client = new S3Client({ region: 'ap-northeast-2' });
 const Bucket = 'korper';
+/* Directory Architecture 
+  - profile/{userEmail}/image
+  - model/{modelUid}/thumbnail.png
+  - model/{modelUid}/model.usdz
+*/
 
 export const getPresignedPostUrl = async (Key: string) => {
   const command = new PutObjectCommand({ Bucket, Key });

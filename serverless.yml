@@ -149,3 +149,25 @@ functions:
           method: delete
           authorizer: 
             name: korperAuthorizer
+  model_get:
+    handler: build/model/get.handler
+    events:
+      - httpApi:
+          path: /model
+          method: get
+  model_post:
+    handler: build/model/post.handler
+    events:
+      - httpApi:
+          path: /model
+          method: post
+          authorizer: 
+            name: korperAuthorizer
+  model_delete:
+    handler: build/model/delete.handler
+    events:
+      - httpApi:
+          path: /model
+          method: delete
+          authorizer: 
+            name: korperAuthorizer
