@@ -598,6 +598,38 @@ paths:
                     type: object
                     description: empty object
 
+  /model/list:
+    get:
+      summary: model/list
+      description: User가 소유한 모든 Model 정보를 조회한다.
+      operationId: model/list/get
+      tags:
+        - model
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: |
+            - 모델 리스트 조회 성공
+            - modelUrl은 null로 전달
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Success
+                  message:
+                    type: string
+                    description: success
+                  result:
+                    type: object
+                    properties:
+                      modelList:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Model'
 
 components:
   securitySchemes:

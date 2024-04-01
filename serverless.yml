@@ -171,3 +171,11 @@ functions:
           method: delete
           authorizer: 
             name: korperAuthorizer
+  model_list_get:
+    handler: build/model/list/get.handler
+    events:
+      - httpApi:
+          path: /model/list
+          method: get
+          authorizer: 
+            name: korperAuthorizer
