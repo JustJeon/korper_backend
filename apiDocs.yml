@@ -538,9 +538,11 @@ paths:
               properties:
                 name: 
                   type: string
+                  nullable: true
                   description: 생성할 모델 이름
                 metadata:
                   type: string
+                  nullable: true
                   description: 생성할 모델 메타데이터(json string)
       responses:
         '200':
