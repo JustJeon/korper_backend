@@ -22,7 +22,7 @@ export const handler = async (event: APIGatewayProxyEventV2WithLambdaAuthorizer<
   const modelUid = nanoid(10);
   await mysqlUtil.create('tb_model', {
     uid: modelUid,
-    user_idx: userIdx,
+    userIdx,
     name,
     metadata: metadata ? JSON.parse(metadata) : null,
   });
